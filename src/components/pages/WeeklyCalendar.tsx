@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { addMonths, endOfWeek, format, startOfMonth, endOfMonth, startOfWeek, subMonths } from "date-fns";
-import { isSameMonth, isSameDay, addDays } from "date-fns";
+import { addMonths, format, startOfWeek, lastDayOfWeek, subMonths } from "date-fns";
+import { isSameDay, addDays } from "date-fns";
 
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,16 +52,12 @@ const RenderDays = () => {
 };
 
 const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) => {
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart);
-  const endDate = endOfWeek(monthEnd);
-
+  const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
+  const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
   const rows = [];
   let days = [];
   let day: any = startDate;
   let formattedDate = "";
-
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, "d");
@@ -69,9 +65,7 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
       days.push(
         <div
           className={`col cell ${
-            !isSameMonth(day, monthStart)
-              ? "disabled"
-              : isSameDay(day, selectedDate)
+            isSameDay(day, selectedDate)
               ? "selected"
               : format(currentMonth, "M") !== format(day, "M")
               ? "not-valid"
@@ -80,20 +74,22 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
           key={day}
           onClick={() => onDateClick(cloneDay)}
         >
-          <span className={format(currentMonth, "M") !== format(day, "M") ? "text not-valid" : ""}>
-            {formattedDate}
-          </span>
+          <span className="number">{formattedDate}</span>
         </div>,
       );
       day = addDays(day, 1);
     }
-    rows.push(<CalenderCells key={day}>{days}</CalenderCells>);
+    rows.push(
+      <CalenderCells className="row" key={day}>
+        {days}
+      </CalenderCells>,
+    );
     days = [];
   }
   return <div className="body">{rows}</div>;
 };
 
-const MonthlyCalender = () => {
+const WeeklyCalendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -115,7 +111,7 @@ const MonthlyCalender = () => {
   );
 };
 
-export default MonthlyCalender;
+export default WeeklyCalendar;
 
 const CalenderWrap = styled.div`
   width: 100%;
