@@ -30,7 +30,7 @@ export default Main;
 const MainWrap = styled.div`
   width: 375px;
   height: 667px;
-  background-color: #fbe8e8;
+  background-color: #e8fbfa;
   margin: 2rem auto;
   overflow: scroll;
   border-radius: 2rem;
