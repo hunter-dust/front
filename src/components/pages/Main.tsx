@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Monthly from "./MonthlyCalender";
 import Weekly from "./WeeklyCalender";
+import ListBox from "components/UI/molecules/ListBox";
 import styled from "styled-components";
 
 const Main = () => {
@@ -21,6 +22,7 @@ const Main = () => {
         </Btn>
       </MainBtnWrap>
       <div>{mode === "monthly" ? <Monthly /> : <Weekly />}</div>
+      <ListBox />
     </MainWrap>
   );
 };

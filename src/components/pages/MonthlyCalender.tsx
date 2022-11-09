@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import Drawer from "react-modern-drawer";
 import { addMonths, endOfWeek, format, startOfMonth, endOfMonth, startOfWeek, subMonths } from "date-fns";
 import { isSameMonth, isSameDay, addDays } from "date-fns";
 
 import styled from "styled-components";
+import "react-modern-drawer/dist/index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -62,6 +64,11 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
   let day: any = startDate;
   let formattedDate = "";
 
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDrawer = useCallback(() => {
+    setIsOpen((prevState) => !prevState);
+  }, []);
+
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, "d");
@@ -90,7 +97,14 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
     rows.push(<CalenderCells key={day}>{days}</CalenderCells>);
     days = [];
   }
-  return <div className="body">{rows}</div>;
+  return (
+    <>
+      <div className="body" onClick={toggleDrawer}>
+        {rows}
+      </div>
+      <Drawer open={isOpen} onClose={toggleDrawer} direction="bottom" overlayOpacity={0} />
+    </>
+  );
 };
 
 const MonthlyCalender = () => {
