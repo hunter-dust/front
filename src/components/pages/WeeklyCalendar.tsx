@@ -1,25 +1,26 @@
 import React, { useState } from "react";
-import { endOfWeek, format, startOfMonth, endOfMonth, startOfWeek } from "date-fns";
-import { isSameMonth, isSameDay, addDays } from "date-fns";
+import { addMonths, format, startOfWeek, lastDayOfWeek, subMonths } from "date-fns";
+import { isSameDay, addDays } from "date-fns";
 
 import styled from "styled-components";
-import { addWeeks, subWeeks } from "date-fns/esm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 interface renderType {
   currentMonth: Date;
-  preveWeek: React.MouseEventHandler<HTMLSpanElement>;
-  nextWeek: React.MouseEventHandler<HTMLSpanElement>;
+  preveMonth: React.MouseEventHandler<HTMLSpanElement>;
+  nextMonth: React.MouseEventHandler<HTMLSpanElement>;
 }
 
 interface renderType2 {
   currentMonth: Date;
-  currentDate: Date;
   selectedDate: Date;
   onDateClick: React.MouseEventHandler<HTMLDivElement>;
   //매개변수 day 의 타입을 어떻게 지정해야할지 잘 모르겠다...그래서 일단 any로 해둠
 }
 
-const RenderHeader = ({ currentMonth, preveWeek, nextWeek }: renderType) => {
+const RenderHeader = ({ currentMonth, preveMonth, nextMonth }: renderType) => {
   return (
     <CalenderHeader>
       <div className="col">
@@ -29,8 +30,12 @@ const RenderHeader = ({ currentMonth, preveWeek, nextWeek }: renderType) => {
         </div>
       </div>
       <div className="btnArea">
-        <span onClick={preveWeek}>전주</span>
-        <span onClick={nextWeek}>차주</span>
+        <span onClick={preveMonth}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </span>
+        <span onClick={nextMonth}>
+          <FontAwesomeIcon icon={faArrowRight} />
+        </span>
       </div>
     </CalenderHeader>
   );
@@ -46,17 +51,13 @@ const RenderDays = () => {
   return <CalenderWeek>{days}</CalenderWeek>;
 };
 
-const RenderCells = ({ currentMonth, currentDate, selectedDate, onDateClick }: renderType2) => {
-  const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart);
-  const endDate = endOfWeek(monthEnd);
-
+const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) => {
+  const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
+  const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
   const rows = [];
-  let days: any = [];
+  let days = [];
   let day: any = startDate;
   let formattedDate = "";
-
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, "d");
@@ -64,9 +65,7 @@ const RenderCells = ({ currentMonth, currentDate, selectedDate, onDateClick }: r
       days.push(
         <div
           className={`col cell ${
-            !isSameMonth(day, monthStart)
-              ? "disabled"
-              : isSameDay(day, selectedDate)
+            isSameDay(day, selectedDate)
               ? "selected"
               : format(currentMonth, "M") !== format(day, "M")
               ? "not-valid"
@@ -75,50 +74,44 @@ const RenderCells = ({ currentMonth, currentDate, selectedDate, onDateClick }: r
           key={day}
           onClick={() => onDateClick(cloneDay)}
         >
-          <span className={format(currentMonth, "M") !== format(day, "M") ? "text not-valid" : ""}>
-            {formattedDate}
-          </span>
+          <span className="number">{formattedDate}</span>
         </div>,
       );
       day = addDays(day, 1);
     }
-    rows.push(<CalenderCells key={day}>{days}</CalenderCells>);
+    rows.push(
+      <CalenderCells className="row" key={day}>
+        {days}
+      </CalenderCells>,
+    );
     days = [];
   }
-  return <CalenderCells key={day}>{days}</CalenderCells>;
+  return <div className="body">{rows}</div>;
 };
 
-const WeeklyCalender = () => {
+const WeeklyCalendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [currentDate, setCurrentDate] = useState(
-    new Date(currentMonth.getFullYear(), currentMonth.getMonth(), currentMonth.getDate()),
-  );
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const preveWeek = () => {
-    setCurrentDate(subWeeks(currentDate, 7));
+  const preveMonth = () => {
+    setCurrentMonth(subMonths(currentMonth, 1));
   };
-  const nextWeek = () => {
-    setCurrentDate(addWeeks(currentDate, 7));
+  const nextMonth = () => {
+    setCurrentMonth(addMonths(currentMonth, 1));
   };
   const onDateClick = (day: any) => {
     setSelectedDate(day);
   };
   return (
     <CalenderWrap>
-      <RenderHeader currentMonth={currentMonth} preveWeek={preveWeek} nextWeek={nextWeek} />
+      <RenderHeader currentMonth={currentMonth} preveMonth={preveMonth} nextMonth={nextMonth} />
       <RenderDays />
-      <RenderCells
-        currentMonth={currentMonth}
-        currentDate={currentDate}
-        selectedDate={selectedDate}
-        onDateClick={onDateClick}
-      />
+      <RenderCells currentMonth={currentMonth} selectedDate={selectedDate} onDateClick={onDateClick} />
     </CalenderWrap>
   );
 };
 
-export default WeeklyCalender;
+export default WeeklyCalendar;
 
 const CalenderWrap = styled.div`
   width: 100%;

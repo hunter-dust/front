@@ -1,7 +1,8 @@
 import { useState } from "react";
-import Monthly from "./MonthlyCalender";
-import Weekly from "./WeeklyCalender";
+import Monthly from "./MonthlyCalendar";
+import Weekly from "./WeeklyCalendar";
 import ListBox from "components/UI/molecules/ListBox";
+
 import styled from "styled-components";
 
 const Main = () => {
@@ -32,7 +33,7 @@ export default Main;
 const MainWrap = styled.div`
   width: 375px;
   height: 667px;
-  background-color: #fbe8e8;
+  background-color: #fdfdfd;
   margin: 2rem auto;
   overflow: scroll;
   border-radius: 2rem;

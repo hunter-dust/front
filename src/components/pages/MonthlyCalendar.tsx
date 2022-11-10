@@ -107,7 +107,7 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
   );
 };
 
-const MonthlyCalender = () => {
+const MonthlyCalendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -129,7 +129,7 @@ const MonthlyCalender = () => {
   );
 };
 
-export default MonthlyCalender;
+export default MonthlyCalendar;
 
 const CalenderWrap = styled.div`
   width: 100%;
