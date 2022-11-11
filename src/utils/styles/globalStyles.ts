@@ -4,17 +4,22 @@ import reset from "styled-reset";
 export const GlobalStyles = createGlobalStyle`
   ${reset}
 
-  html {
+  *,html {
     font-size: 62.5%;
-  }
-
-  *,
-  body {
     font-size: 1.6rem;
     box-sizing: border-box;
   }
-  #root{
+
+  body {
     background-color: #97c3fe;
+  }
+  #root{
+    width: 375px;
+    height: 667px;
+    background-color: #fdfdfd;
+    margin: 2rem auto;
+    overflow: scroll;
+    border-radius: 2rem;
   }
   a {
     text-decoration: none;
