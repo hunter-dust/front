@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { addMonths, format, startOfWeek, lastDayOfWeek, subMonths } from "date-fns";
-import { isSameDay, addDays } from "date-fns";
+import React, { useState, useCallback } from "react";
+import Drawer from "react-modern-drawer";
+import { addMonths, endOfWeek, format, startOfMonth, endOfMonth, startOfWeek, subMonths } from "date-fns";
+import { isSameMonth, isSameDay, addDays } from "date-fns";
 
 import styled from "styled-components";
+import "react-modern-drawer/dist/index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -52,12 +54,21 @@ const RenderDays = () => {
 };
 
 const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) => {
-  const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
-  const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
+  const monthStart = startOfMonth(currentMonth);
+  const monthEnd = endOfMonth(monthStart);
+  const startDate = startOfWeek(monthStart);
+  const endDate = endOfWeek(monthEnd);
+
   const rows = [];
   let days = [];
   let day: any = startDate;
   let formattedDate = "";
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDrawer = useCallback(() => {
+    setIsOpen((prevState) => !prevState);
+  }, []);
+
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
       formattedDate = format(day, "d");
@@ -65,7 +76,9 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
       days.push(
         <div
           className={`col cell ${
-            isSameDay(day, selectedDate)
+            !isSameMonth(day, monthStart)
+              ? "disabled"
+              : isSameDay(day, selectedDate)
               ? "selected"
               : format(currentMonth, "M") !== format(day, "M")
               ? "not-valid"
@@ -74,22 +87,27 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }: renderType2) =
           key={day}
           onClick={() => onDateClick(cloneDay)}
         >
-          <span className="number">{formattedDate}</span>
+          <span className={format(currentMonth, "M") !== format(day, "M") ? "text not-valid" : ""}>
+            {formattedDate}
+          </span>
         </div>,
       );
       day = addDays(day, 1);
     }
-    rows.push(
-      <CalenderCells className="row" key={day}>
-        {days}
-      </CalenderCells>,
-    );
+    rows.push(<CalenderCells key={day}>{days}</CalenderCells>);
     days = [];
   }
-  return <div className="body">{rows}</div>;
+  return (
+    <>
+      <div className="body" onClick={toggleDrawer}>
+        {rows}
+      </div>
+      <Drawer open={isOpen} onClose={toggleDrawer} direction="bottom" overlayOpacity={0} />
+    </>
+  );
 };
 
-const WeeklyCalendar = () => {
+const MonthlyCalendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -111,10 +129,11 @@ const WeeklyCalendar = () => {
   );
 };
 
-export default WeeklyCalendar;
+export default MonthlyCalendar;
 
 const CalenderWrap = styled.div`
   width: 100%;
+  height: 20%;
 `;
 
 const CalenderHeader = styled.div`
