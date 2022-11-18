@@ -26,26 +26,25 @@ const RenderHeader = ({ currentMonth, preveMonth, nextMonth }: renderType) => {
   return (
     <CalenderHeader>
       <div className="col">
+        <div className="btn" onClick={preveMonth}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </div>
         <div className="text">
           <span>{format(currentMonth, "M")}월</span>
-          {format(currentMonth, "yyyy")}
+          {/* {format(currentMonth, "yyyy")} */}
+        </div>
+        <div className="btn" onClick={nextMonth}>
+          <FontAwesomeIcon icon={faArrowRight} />
         </div>
       </div>
-      <div className="btnArea">
-        <span onClick={preveMonth}>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </span>
-        <span onClick={nextMonth}>
-          <FontAwesomeIcon icon={faArrowRight} />
-        </span>
-      </div>
+      {/* <div className="btnArea"></div> */}
     </CalenderHeader>
   );
 };
 
 const RenderDays = () => {
   const days = [];
-  const date = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const date = ["S", "M", "T", "W", "T", "F", "S"];
 
   for (let i = 0; i < 7; i++) {
     days.push(<div key={i}>{date[i]}</div>);
@@ -132,46 +131,62 @@ const MonthlyCalendar = () => {
 export default MonthlyCalendar;
 
 const CalenderWrap = styled.div`
-  width: 100%;
-  height: 20%;
+  border-radius: 1rem;
+  .body {
+    position: relative;
+    top: -1rem;
+  }
 `;
 
 const CalenderHeader = styled.div`
-  background-color: #eeeeee;
   color: #4e4e4e;
-  padding: 12px 24px;
   margin: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   flex-direction: row;
+  .col {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .btn {
+    margin: 0.6rem;
+  }
+  .text {
+    font-size: 0.7rem;
+  }
   .text > span {
     font-weight: 800;
-    font-size: 25px;
+    font-size: 1.5rem;
     padding: 0.5rem;
-  }
-  .btnArea {
-    display: flex;
-    justify-content: space-around;
-    width: 13%;
   }
 `;
 const CalenderWeek = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background-color: aliceblue;
   text-align: center;
   height: 39px;
   line-height: 39px;
+  font-size: 0.8rem;
+  div:nth-child(1) {
+    color: #ff00b7d9;
+  }
+  div:nth-child(7) {
+    color: #4139e0;
+  }
 `;
 const CalenderCells = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 20px;
-  margin: 1rem;
+  margin: 0.4rem;
   place-items: center;
   text-align: center;
   color: #7e7e83;
+  height: 1.5rem;
+  font-size: 0.8rem;
+
   div:nth-child(1) {
     color: #ff00b7d9;
   }
@@ -191,10 +206,12 @@ const CalenderCells = styled.div`
     visibility: hidden;
   }
   .selected {
-    width: 3rem;
-    height: 3rem;
-    background-color: #d745ff;
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #ba19c9;
     border-radius: 50%;
-    color: #fff;
+    line-height: 1.6rem;
+    color: #fff !important;
   }
 `;

@@ -19,7 +19,7 @@ export const GlobalStyles = createGlobalStyle`
     background-color: #fdfdfd;
     margin: 2rem auto;
     overflow: scroll;
-    border-radius: 2rem;
+    border-radius: 1rem;
   }
   a {
     text-decoration: none;

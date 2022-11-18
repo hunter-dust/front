@@ -30,17 +30,23 @@ const MainTemp = () => {
 
 export default MainTemp;
 
-const MainWrap = styled.div``;
+const MainWrap = styled.div`
+  /* background-color: palegoldenrod; */
+  border-radius: 1rem;
+  box-shadow: 10px 15px 5px #c6c6c6;
+`;
 const MainBtnWrap = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin: 2rem;
+  justify-content: center;
+  margin: 0.5rem;
   .active {
     background-color: #6ba6db;
+    color: #eef5fa;
   }
 `;
 const Btn = styled.button`
   border: none;
   background-color: #7bbdf7;
-  padding: 1rem;
+  padding: 0.5rem;
+  font-size: 0.8rem;
 `;

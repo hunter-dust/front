@@ -1,14 +1,29 @@
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import StyledButton from "../UI/atoms/loginBtn";
+import { loginToNaver } from "../../redux/modules/LoginSlice";
 import NaverLogin from "components/UI/molecules/NaverLogin";
+import KakaoLogin from "components/UI/molecules/KakaoLogin";
 import styled from "styled-components";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const loginWithNaver = () => {
+    // dispatch(loginToNaver(true, "dd"));
+  };
+
   return (
     <LoginWrap>
       DUST HUNTER
       <LoginBtnWrap>
-        {/* <StyledButton variant="kakao">카카오톡 로그인</StyledButton> */}
-        <NaverLogin />
+        <StyledButton variant="naver" onClick={loginWithNaver}>
+          네이버 로그인
+          {/* <NaverLogin /> */}
+        </StyledButton>
+        <KakaoLogin />
       </LoginBtnWrap>
     </LoginWrap>
   );
