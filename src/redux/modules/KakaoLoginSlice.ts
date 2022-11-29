@@ -20,7 +20,6 @@ const initialState: KakaoState = {
 
 // 로그인 요청 및 유저 정보 가져오기
 export const kakaoLogin = createAsyncThunk("KakaoSlice/socialLogin", async (code: String | any, thunkAPI) => {
-  console.log(code);
   try {
     const response = await instance.get(`kakao`, code.code);
     const provider = response.data.user.provider;
